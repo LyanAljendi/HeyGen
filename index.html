@@ -1,30 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <title>LiveAvatar Voice Chat</title>
   <script src="https://cdn.livekit.io/livekit-client/latest/livekit.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 2rem;
+    }
+    video {
+      width: 480px;
+      height: 360px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: black;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <h1>Talk to your Avatar</h1>
-  <video id="remoteVideo" autoplay playsinline></video>
+  <h1>Talk to Your LiveAvatar</h1>
+  <video id="avatarVideo" autoplay playsinline></video>
+  <button id="startBtn">Start Voice Chat</button>
 
   <script>
-    const url = "wss://chatham-6f5vepem.livekit.cloud";
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJicm93c2VyLXRva2VuIiwiaXNzIjoiQVBJQ0FzSmFhOVY1RG5rIiwic3ViIjoidXNlcjEiLCJpYXQiOjE3NzA2NDczNDgsImV4cCI6MTc3MDY1MDk0OCwicm9vbSI6InRlc3Qtcm9vbSIsInJvb21fam9pbiI6dHJ1ZX0.eOnyaS45GjZAnhJQ9Q3Bq6UMBU7XJ4xHFMoFXrT-H1M
+    // ===== CONFIGURATION =====
+    const LIVEKIT_URL = "wss://chatham-6f5vepem.livekit.cloud"; // your LiveKit server
+    const ROOM_NAME = "test-room"; // must match agent's room
+    const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJicm93c2VyLXRva2VuIiwiaXNzIjoiQVBJQ0FzSmFhOVY1RG5rIiwic3ViIjoidXNlcjEiLCJpYXQiOjE3NzA2NDczNDgsImV4cCI6MTc3MDY1MDk0OCwicm9vbSI6InRlc3Qtcm9vbSIsInJvb21fam9pbiI6dHJ1ZX0.eOnyaS45GjZAnhJQ9Q3Bq6UMBU7XJ4xHFMoFXrT-H1M"; // token generated from Python agent
 
-";
-    const roomName = "ctx.room";
+    // ===== GLOBAL VARIABLES =====
+    let room;
 
-    const room = new LiveKit.Room();
-    room.connect(url, token, { room: roomName }).then(() => {
-      console.log("Connected to room:", roomName);
+    async function startVoiceChat() {
+      // 1️⃣ Create a room instance
+      room = new LiveKit.Room();
 
+      // 2️⃣ Connect to LiveKit room
+      try {
+        await room.connect(LIVEKIT_URL, TOKEN, { room: ROOM_NAME });
+        console.log("Connected to room:", ROOM_NAME);
+      } catch (err) {
+        console.error("Failed to connect:", err);
+        return;
+      }
+
+      // 3️⃣ Subscribe to avatar video/audio tracks
       room.on('trackSubscribed', (track, participant) => {
         if (track.kind === 'video') {
-          track.attach(document.getElementById('remoteVideo'));
+          track.attach(document.getElementById('avatarVideo'));
+        }
+        if (track.kind === 'audio') {
+          const audioEl = new Audio();
+          audioEl.autoplay = true;
+          track.attach(audioEl);
         }
       });
-    }).catch(console.error);
+
+      // 4️⃣ Capture microphone input
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        for (const track of stream.getAudioTracks()) {
+          room.localParticipant.publishTrack(track);
+        }
+        console.log("Microphone access granted, audio publishing started");
+      } catch (err) {
+        console.error("Microphone access denied:", err);
+      }
+
+      // 5️⃣ Optional: data channel for text commands
+      const dc = room.localParticipant.createDataChannel('agent');
+      dc.onopen = () => console.log("Data channel open");
+      dc.onmessage = (event) => console.log("Message from agent:", event.data);
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startVoiceChat);
   </script>
 </body>
 </html>
+
 
