@@ -4,12 +4,14 @@
   <script src="https://cdn.livekit.io/livekit-client/latest/livekit.min.js"></script>
 </head>
 <body>
-  <h1>LiveKit Test Avatar</h1>
+  <h1>Talk to your Avatar</h1>
   <video id="remoteVideo" autoplay playsinline></video>
 
   <script>
-    const url = "wss://chatham-6f5vepem.livekit.cloud/agent"; // your server URL
-    const token = "PASTE_YOUR_ACCESS_TOKEN_HERE"; // generated from Python
+    const url = "wss://chatham-6f5vepem.livekit.cloud";
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJicm93c2VyLXRva2VuIiwiaXNzIjoiQVBJQ0FzSmFhOVY1RG5rIiwic3ViIjoidXNlcjEiLCJpYXQiOjE3NzA2NDczNDgsImV4cCI6MTc3MDY1MDk0OCwicm9vbSI6InRlc3Qtcm9vbSIsInJvb21fam9pbiI6dHJ1ZX0.eOnyaS45GjZAnhJQ9Q3Bq6UMBU7XJ4xHFMoFXrT-H1M
+
+";
     const roomName = "test-room";
 
     const room = new LiveKit.Room();
@@ -18,11 +20,11 @@
 
       room.on('trackSubscribed', (track, participant) => {
         if (track.kind === 'video') {
-          const videoElement = document.getElementById('remoteVideo');
-          track.attach(videoElement);
+          track.attach(document.getElementById('remoteVideo'));
         }
       });
-    }).catch(err => console.error(err));
+    }).catch(console.error);
   </script>
 </body>
 </html>
+
