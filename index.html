@@ -12,7 +12,7 @@
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJicm93c2VyLXRva2VuIiwiaXNzIjoiQVBJQ0FzSmFhOVY1RG5rIiwic3ViIjoidXNlcjEiLCJpYXQiOjE3NzA2NDczNDgsImV4cCI6MTc3MDY1MDk0OCwicm9vbSI6InRlc3Qtcm9vbSIsInJvb21fam9pbiI6dHJ1ZX0.eOnyaS45GjZAnhJQ9Q3Bq6UMBU7XJ4xHFMoFXrT-H1M
 
 ";
-    const roomName = "test-room";
+    const roomName = "ctx.room";
 
     const room = new LiveKit.Room();
     room.connect(url, token, { room: roomName }).then(() => {
