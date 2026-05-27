@@ -1,1 +1,263 @@
-<iframe src="https://embed.liveavatar.com/v1/917dd1ec-4e10-48d9-a0bb-0b703e9559e1?orientation=horizontal" allow="microphone" title="LiveAvatar Embed" style="aspect-ratio: 16/9;"></iframe>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatcom · Valerie</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:    #f5f0e8;
+      --warm:     #e8dfd0;
+      --sand:     #c9b99a;
+      --gold:     #a8834a;
+      --deep:     #1c1410;
+      --mid:      #4a3728;
+      --accent:   #c07c3a;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--deep);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow: hidden;
+    }
+
+    /* ── Noise grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* ── Ambient gradient blobs ── */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .blob-1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #d4a96a 0%, transparent 70%);
+      top: -120px; right: -80px;
+      animation: drift1 14s ease-in-out infinite alternate;
+    }
+    .blob-2 {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, #b07040 0%, transparent 70%);
+      bottom: -60px; left: -60px;
+      animation: drift2 18s ease-in-out infinite alternate;
+    }
+    @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(-30px, 20px) scale(1.08); } }
+    @keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(20px,-15px) scale(1.05); } }
+
+    /* ── Layout ── */
+    .page {
+      position: relative;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      grid-template-columns: 1fr;
+      padding: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 28px 44px 20px;
+      border-bottom: 1px solid rgba(168,131,74,0.25);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .brand-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .brand-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      color: var(--deep);
+    }
+    .brand-title em {
+      font-style: italic;
+      color: var(--mid);
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border: 1px solid rgba(168,131,74,0.4);
+      border-radius: 100px;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(168,131,74,0.06);
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #6db86d;
+      box-shadow: 0 0 0 3px rgba(109,184,109,0.25);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(109,184,109,0.25); }
+      50%       { box-shadow: 0 0 0 6px rgba(109,184,109,0.10); }
+    }
+
+    /* ── Video area ── */
+    .video-wrap {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 44px;
+    }
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow:
+        0 2px 6px rgba(28,20,16,0.10),
+        0 12px 40px rgba(28,20,16,0.14),
+        0 0 0 1px rgba(168,131,74,0.20);
+    }
+
+    /* Gold corner accents */
+    .video-frame::before,
+    .video-frame::after {
+      content: '';
+      position: absolute;
+      width: 22px; height: 22px;
+      border-color: var(--gold);
+      border-style: solid;
+      z-index: 20;
+      opacity: 0.7;
+    }
+    .video-frame::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
+    .video-frame::after  { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+    .corner-br { position: absolute; bottom: 0; left: 0; width: 22px; height: 22px; border: 2px solid var(--gold); border-width: 0 0 2px 2px; z-index: 20; opacity: 0.7; }
+    .corner-tl { position: absolute; top: 0; right: 0; width: 22px; height: 22px; border: 2px solid var(--gold); border-width: 2px 2px 0 0; z-index: 20; opacity: 0.7; }
+
+    .video-frame iframe {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: none;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 44px 24px;
+      border-top: 1px solid rgba(168,131,74,0.18);
+    }
+
+    .footer-left {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--sand);
+    }
+
+    .footer-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: var(--sand);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Fade-in entrance ── */
+    header, .video-wrap, footer {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.9s ease forwards;
+    }
+    header      { animation-delay: 0.1s; }
+    .video-wrap { animation-delay: 0.3s; }
+    footer      { animation-delay: 0.5s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      header, footer { padding-left: 20px; padding-right: 20px; }
+      .video-wrap    { padding: 16px 20px; }
+      .brand-title   { font-size: 26px; }
+      .footer-tagline { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="page">
+    <header>
+      <div class="brand">
+        <span class="brand-name">Chatcom</span>
+        <span class="brand-title">Meet <em>Valérie</em></span>
+      </div>
+      <div class="status-pill">
+        <span class="dot"></span>
+        Live
+      </div>
+    </header>
+
+    <div class="video-wrap">
+      <div class="video-frame">
+        <div class="corner-br"></div>
+        <div class="corner-tl"></div>
+        <iframe
+          src="https://embed.liveavatar.com/v1/a3e53ace-d28c-4ba2-9585-6f475049c1e1?orientation=horizontal"
+          allow="microphone"
+          title="LiveAvatar Embed — Valérie"
+        ></iframe>
+      </div>
+    </div>
+
+    <footer>
+      <span class="footer-left">Powered by LiveAvatar</span>
+      <span class="footer-tagline">Your conversation, beautifully alive.</span>
+    </footer>
+  </div>
+</body>
+</html>
